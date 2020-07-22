@@ -24,7 +24,7 @@ class Scraper:
         list_events = []
 
         for i in range(0,len(events)-1):
-        	list_events.append([events[i].get("data-event-datetime"), events[i].next_element.next_element.next_element.next_element.next_element.next_element.get("title"), events[i].next_element.next_element.next_element.next_element.next_element.next_element.next_element.next_element.next_element.next_element.get("title"), events[i].a.text[12:]])
+            list_events.append([events[i].get("data-event-datetime"), events[i].find('td', {'class': 'left flagCur noWrap'}).text.replace('\xa0 ', ''), events[i].find('td', {'class': 'left textNum sentiment noWrap'}).get('title'), events[i].find('td', {'class': 'left event'}).text.replace('\r\n\t\t\t\t      ', '').replace('\n', '')])
 
         self.pd_events = pd.DataFrame(list_events)
 
@@ -34,8 +34,8 @@ class Scraper:
         high[0] = high[0].dt.tz_localize('America/New_York')
         high[0] = high[0].dt.tz_convert('America/Sao_Paulo')
         high[1] = high[1]
-        high_us = high[high[1] == 'United States']
-        high_br = high[high[1] == 'Brazil']
+        high_us = high[high[1] == 'USD']
+        high_br = high[high[1] == 'BRL']
         high_us.reset_index()
         high_br.reset_index()
 
